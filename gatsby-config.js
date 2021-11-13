@@ -4,10 +4,10 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
+    title: `Etherflare`,
+    description: `Tracking ethereum data from around the chain`,
     author: `@gatsbyjs`,
-    siteUrl: `https://gatsbystarterdefaultsource.gatsbyjs.io/`,
+    siteUrl: `https://etherflare.com`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -30,13 +30,13 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `Etherflare`,
+        short_name: `etherflare`,
         start_url: `/`,
-        background_color: `#663399`,
+        background_color: `#15114a`,
         // This will impact how browsers show your PWA/website
         // https://css-tricks.com/meta-theme-color-and-trickery/
-        // theme_color: `#663399`,
+        theme_color: `#15114a`,
         display: `minimal-ui`,
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
