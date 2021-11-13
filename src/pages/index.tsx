@@ -11,6 +11,9 @@ import { format } from "date-fns"
 export default function page () {
   const {data, loading, error} = useQuery(gql`
     query {
+      twentyFourHourAverage {
+        amount
+      }
       dailyAverages(limit: 40) {
         amount
         date
@@ -29,6 +32,8 @@ export default function page () {
   const dailyAverages: any[] = data ? data.dailyAverages : []
   const weeklyAverages: any[] = data ? data.weeklyAverages : []
   const hourlyAverages: any[] = data ? data.hourlyAverages : []
+  const twentyFourHourAverage: any = data ? data.twentyFourHourAverage : {}
+
 
 
 
@@ -83,6 +88,11 @@ const visualData = {
         }),
         backgroundColor: 'rgba(50, 200, 500, .3)',
         borderColor: 'rgba(200, 50, 50, .3)',
+      },
+      {
+        label: '24 hour average',
+        data: hourlyAverages.map(a => twentyFourHourAverage.amount),
+        borderColor: 'rgba(50, 50, 200, .3)'
       }
     ]
   }
