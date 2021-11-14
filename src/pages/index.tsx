@@ -16,7 +16,7 @@ export default function page () {
       }
       hourlyHigh
       hourlyLow
-      current(limit: 24) {
+      current(limit: 8) {
         amount
         eth_dominance
         btc_dominance
@@ -195,7 +195,7 @@ const visualData = {
   if (loading) return <p>Loading...</p>
 
   // get the percentage change between the most current amount and the average of the last 24 hours
-  const percentChange = (current[0].amount - dailyAverages[dailyAverages.length - 1].amount) / twentyFourHourAverage.amount * 100
+  const percentChange = (current[ current.length -1].amount - dailyAverages[dailyAverages.length - 1].amount) / twentyFourHourAverage.amount * 100
   const percentChangeString = percentChange.toFixed(2) + "%"
 
 
@@ -205,7 +205,7 @@ const visualData = {
       <Seo title="Home" />
       <h3>Eth Stats</h3> 
       <ul>
-        <li style={{fontWeight: 'bold'}}>Current Price: ${current[0].amount}</li>
+        <li style={{fontWeight: 'bold'}}>Current Price: ${current[current.length - 1].amount}</li>
         <li style={{fontWeight: 'bold'}}>Percentage high / low of 24 hour average: {percentChangeString}</li>
         <li style={{fontWeight: 'bold'}}>24 hour high: { data.hourlyHigh }</li>
         <li style={{fontWeight: 'bold'}}>24 hour low: { data.hourlyLow }</li>
