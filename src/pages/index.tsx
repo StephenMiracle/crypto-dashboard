@@ -147,7 +147,7 @@ const visualData = {
       },
       {
         label: 'Weekly average',
-        data: hourlyAverages.map((a, i) => {
+        data: current.map((a, i) => {
           return weeklyAverages[weeklyAverages.length - 1].amount
         }),
         backgroundColor: 'rgba(50, 200, 500, .3)',
@@ -155,17 +155,17 @@ const visualData = {
       },
       {
         label: '24 hour average',
-        data: hourlyAverages.map(a => twentyFourHourAverage.amount),
+        data: current.map(a => twentyFourHourAverage.amount),
         borderColor: 'rgba(50, 50, 200, .3)'
       },
       {
         label: 'Weekly high',
-        data: hourlyAverages.map((a, i) => {  return weeklyAverages[weeklyAverages.length - 1].high }),
+        data: current.map((a, i) => {  return weeklyAverages[weeklyAverages.length - 1].high }),
         borderColor: 'rgba(25, 25, 25, .4)'
       },
       {
         label: 'Weekly low',
-        data: hourlyAverages.map((a, i) => {  return weeklyAverages[weeklyAverages.length - 1].low }),
+        data: current.map((a, i) => {  return weeklyAverages[weeklyAverages.length - 1].low }),
         borderColor: 'rgba(105, 105, 105, .4)'
       },
     ],
