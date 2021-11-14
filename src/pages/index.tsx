@@ -18,6 +18,11 @@ export default function page () {
       hourlyLow
       weeklyHigh
       weeklyLow
+      volumeData {
+        current
+        day
+        week
+      }
       current(limit: 6) {
         amount
         eth_dominance
@@ -51,6 +56,50 @@ export default function page () {
   const twentyFourHourAverage: any = data ? data.twentyFourHourAverage : {}
   const current: any[] = data ? data.current : []
 
+
+  const buySignals: any[] = []
+  const sellSignals: any[] = []
+
+  // need to get the total amount of buy signals and list what they are
+  // current price is lower than the average of the last 24 hours
+  // current price is lower than the average of the last 7 days
+  // current price is higher than the 7 day low.
+  // volume is lower than the average of the last 7 days
+  if (current.length > 0) {
+    if (current[current.length - 1].amount < data.twentyFourHourAverage.amount) {
+      buySignals.push("current price is lower than the average of the last 24 hours")
+    }
+
+    if (current[current.length - 1].amount < data.weeklyAverages[data.weeklyAverages.length - 1].amount) {
+      buySignals.push("current price is lower than the average of the last 7 days")
+    }
+
+    if (current[current.length - 1].amount > data.weeklyLow) {
+      buySignals.push("current price is greater than the 7 day low")
+    }
+
+    if (data.volumeData.current < data.volumeData.week) {
+      buySignals.push("volume is lower than the average of the last 7 days")
+    }
+
+    // Sell signals
+    if (current[current.length - 1].amount > data.weeklyAverages[data.weeklyAverages.length - 1].amount) {
+      sellSignals.push("current price is greater than the 7 day average")
+    }
+
+    if (current[current.length - 1].amount > data.twentyFourHourAverage.amount) {
+      sellSignals.push("current price is greater than the daily average")
+    }
+
+    if (current[current.length - 1].amount < data.weeklyHigh && current[current.length - 1].amount > data.twentyFourHourAverage.amount) {
+      sellSignals.push("current price is less than the 7 day low")
+    }
+
+    if (current[current.length - 1].amount < data.hourlyHigh && current[current.length - 1].amount > data.twentyFourHourAverage.amount) {
+      sellSignals.push("current price is less than the daily high")
+    }
+  }
+  
 
 
 
@@ -214,11 +263,33 @@ const visualData = {
         <li style={{fontWeight: 'bold'}}>24 Hour Average: ${twentyFourHourAverage.amount.toFixed(2)}</li>
         <li style={{fontWeight: 'bold'}}>7 day Average: ${weeklyAverages[weeklyAverages.length - 1].amount.toFixed(2)}</li>
         <li style={{fontWeight: 'bold'}}>24 hour average percent change: {percentChangeString}</li>
-        <li style={{fontWeight: 'bold'}}>7 dayr average percent change: {percentChangeWeek.toFixed(3)}%</li>
+        <li style={{fontWeight: 'bold'}}>7 day average percent change: {percentChangeWeek.toFixed(3)}%</li>
         <li style={{fontWeight: 'bold'}}>24 hour high: { data.hourlyHigh.toFixed(2) }</li>
         <li style={{fontWeight: 'bold'}}>24 hour low: { data.hourlyLow.toFixed(2) }</li>
         <li style={{fontWeight: 'bold'}}>7 day high: { data.weeklyHigh.toFixed(2) }</li>
         <li style={{fontWeight: 'bold'}}>7 day low: { data.weeklyLow.toFixed(2) }</li>
+      </ul>
+      <h4>Volume Data</h4>
+      <ul>
+        <li style={{fontWeight: 'bold'}}>Current Volume: { data?.volumeData?.current }</li>
+        <li style={{fontWeight: 'bold'}}>24 Hour Volume: { data?.volumeData?.day }</li>
+        <li style={{fontWeight: 'bold'}}>7 day Volume: { data?.volumeData?.week }</li>
+      </ul>
+      <h4>Buy Signals</h4>
+      <ul>
+        {
+          buySignals?.map(signal => {
+            return <li>{signal}</li>
+          })
+        }
+      </ul>
+      <h4>Sell Signals</h4>
+      <ul>
+        {
+          sellSignals?.map(signal => {
+            return <li>{signal}</li>
+          })
+        }
       </ul>
       <h3>6 Hour Real-time</h3>
       {
