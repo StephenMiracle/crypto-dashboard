@@ -16,7 +16,9 @@ export default function page () {
       }
       hourlyHigh
       hourlyLow
-      current(limit: 8) {
+      weeklyHigh
+      weeklyLow
+      current(limit: 6) {
         amount
         eth_dominance
         btc_dominance
@@ -195,22 +197,30 @@ const visualData = {
   if (loading) return <p>Loading...</p>
 
   // get the percentage change between the most current amount and the average of the last 24 hours
-  const percentChange = (current[ current.length -1].amount - dailyAverages[dailyAverages.length - 1].amount) / twentyFourHourAverage.amount * 100
+  const percentChange = (current[ current.length -1].amount - twentyFourHourAverage.amount) / twentyFourHourAverage.amount * 100
   const percentChangeString = percentChange.toFixed(2) + "%"
+
+  // get the percentage change between the most current amount and the average of the last 7 days
+  const percentChangeWeek = (current[ current.length -1].amount - weeklyAverages[weeklyAverages.length - 1].amount) / weeklyAverages[weeklyAverages.length - 1].amount * 100
 
 
 
   return (
     <Layout>
       <Seo title="Home" />
-      <h3>Eth Stats</h3> 
+      <h3>Ethereum Stats</h3> 
       <ul>
-        <li style={{fontWeight: 'bold'}}>Current Price: ${current[current.length - 1].amount}</li>
-        <li style={{fontWeight: 'bold'}}>Percentage high / low of 24 hour average: {percentChangeString}</li>
-        <li style={{fontWeight: 'bold'}}>24 hour high: { data.hourlyHigh }</li>
-        <li style={{fontWeight: 'bold'}}>24 hour low: { data.hourlyLow }</li>
+        <li style={{fontWeight: 'bold'}}>Most Recent Price: ${current[current.length - 1].amount.toFixed(2)}</li>
+        <li style={{fontWeight: 'bold'}}>24 Hour Average: ${twentyFourHourAverage.amount.toFixed(2)}</li>
+        <li style={{fontWeight: 'bold'}}>7 day Average: ${weeklyAverages[weeklyAverages.length - 1].amount.toFixed(2)}</li>
+        <li style={{fontWeight: 'bold'}}>24 hour average percent change: {percentChangeString}</li>
+        <li style={{fontWeight: 'bold'}}>7 dayr average percent change: {percentChangeWeek.toFixed(3)}%</li>
+        <li style={{fontWeight: 'bold'}}>24 hour high: { data.hourlyHigh.toFixed(2) }</li>
+        <li style={{fontWeight: 'bold'}}>24 hour low: { data.hourlyLow.toFixed(2) }</li>
+        <li style={{fontWeight: 'bold'}}>7 day high: { data.weeklyHigh.toFixed(2) }</li>
+        <li style={{fontWeight: 'bold'}}>7 day low: { data.weeklyLow.toFixed(2) }</li>
       </ul>
-      <h3>Current</h3>
+      <h3>6 Hour Real-time</h3>
       {
         current && (
           <>
@@ -219,14 +229,14 @@ const visualData = {
           </>
         )
       }
-      <h3>48 Hour Data</h3> 
+      <h3>48 Hourly Averages</h3> 
       {
         hourlyAverages && (
           <Line data={todayData} options={todayOptions} />
         )
       }
 
-      <h3>Historical Data</h3>
+      <h3>40 Day Averages</h3>
       {
         dailyAverages && (
             <Line data={visualData} options={options} />
