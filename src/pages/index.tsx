@@ -23,6 +23,11 @@ export default function page () {
         day
         week
       }
+      marketCapData {
+        current
+        day
+        week
+      }
       current(limit: 6) {
         amount
         eth_dominance
@@ -74,7 +79,7 @@ export default function page () {
       buySignals.push("current price is lower than the average of the last 7 days")
     }
 
-    if (current[current.length - 1].amount > data.weeklyLow) {
+    if (current[current.length - 1].amount > data.weeklyLow && current[current.length - 1].amount < data.twentyFourHourAverage.amount) {
       buySignals.push("current price is greater than the 7 day low")
     }
 
@@ -92,7 +97,7 @@ export default function page () {
     }
 
     if (current[current.length - 1].amount < data.weeklyHigh && current[current.length - 1].amount > data.twentyFourHourAverage.amount) {
-      sellSignals.push("current price is less than the 7 day low")
+      sellSignals.push("current price is less than the 7 day high")
     }
 
     if (current[current.length - 1].amount < data.hourlyHigh && current[current.length - 1].amount > data.twentyFourHourAverage.amount) {
@@ -229,8 +234,39 @@ const visualData = {
         label: 'Current',
         data: current.map(d => d.volume),
         fill: true,
+        backgroundColor: 'rgba(50, 200, 500)',
+        borderColor: '#080',
+      },
+      {
+        label: 'Weekly average',
+        data: current.map((a, i) => {
+          return data.volumeData.week
+        }),
+        fill: false,
+        backgroundColor: 'rgba(200, 50, 50, .3)',
+        borderColor: 'rgba(200, 50, 50, .3)',
+      },
+    ]
+  }
+
+  const marketCapVolume = {
+    labels: current.map(d => { return format(new Date(d.date), "h:m:s aaa") }),
+    datasets: [
+      {
+        label: 'Current',
+        data: current.map(d => d.market_cap),
+        fill: true,
         backgroundColor: 'rgba(50, 200, 500, .3)',
         borderColor: '#080',
+      },
+      {
+        label: 'Weekly average',
+        data: current.map((a, i) => {
+          return data.marketCapData.week
+        }),
+        fill: false,
+        backgroundColor: 'rgba(200, 50, 50, .3)',
+        borderColor: 'rgba(200, 50, 50, .3)',
       },
     ]
   }
@@ -275,6 +311,12 @@ const visualData = {
         <li style={{fontWeight: 'bold'}}>24 Hour Volume: { data?.volumeData?.day }</li>
         <li style={{fontWeight: 'bold'}}>7 day Volume: { data?.volumeData?.week }</li>
       </ul>
+      <h4>Market Cap Data</h4>
+      <ul>
+        <li style={{fontWeight: 'bold'}}>Current Market Cap: { data?.marketCapData?.current }</li>
+        <li style={{fontWeight: 'bold'}}>24 Hour Market Cap: { data?.marketCapData?.day }</li>
+        <li style={{fontWeight: 'bold'}}>7 day Market Cap: { data?.marketCapData?.week }</li>
+      </ul>
       <h4>Buy Signals</h4>
       <ul>
         {
@@ -296,7 +338,10 @@ const visualData = {
         current && (
           <>
           <Line data={currentData} options={todayOptions} />
-          <Bar data={curVolume} options={options} />
+          <h4>Volume</h4>
+          <Line data={curVolume} options={options} />
+          <h4>Market Cap</h4>
+          <Line data={marketCapVolume} options={options} />
           </>
         )
       }
