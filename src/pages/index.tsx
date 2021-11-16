@@ -330,46 +330,65 @@ const hourlyVolumeData = {
   return (
     <Layout>
       <Seo title="Home" />
-      <h3 className="text-sm">Ethereum Stats</h3> 
-      <ul>
-        <li style={{fontWeight: 'bold'}}>Most Recent Price: ${current[current.length - 1].amount.toFixed(2)}</li>
-        <li style={{fontWeight: 'bold'}}>24 Hour Average: ${twentyFourHourAverage.amount.toFixed(2)}</li>
-        <li style={{fontWeight: 'bold'}}>7 day Average: ${weeklyAverages[weeklyAverages.length - 1].amount.toFixed(2)}</li>
-        <li style={{fontWeight: 'bold'}}>24 hour average percent change: {percentChangeString}</li>
-        <li style={{fontWeight: 'bold'}}>7 day average percent change: {percentChangeWeek.toFixed(3)}%</li>
-        <li style={{fontWeight: 'bold'}}>24 hour high: { data.hourlyHigh.toFixed(2) }</li>
-        <li style={{fontWeight: 'bold'}}>24 hour low: { data.hourlyLow.toFixed(2) }</li>
-        <li style={{fontWeight: 'bold'}}>7 day high: { data.weeklyHigh.toFixed(2) }</li>
-        <li style={{fontWeight: 'bold'}}>7 day low: { data.weeklyLow.toFixed(2) }</li>
-      </ul>
-      <h4>Volume Data</h4>
-      <ul>
-        <li style={{fontWeight: 'bold'}}>Current Volume: { data?.volumeData?.current }</li>
-        <li style={{fontWeight: 'bold'}}>24 Hour Volume: { data?.volumeData?.day }</li>
-        <li style={{fontWeight: 'bold'}}>7 day Volume: { data?.volumeData?.week }</li>
-      </ul>
-      <h4>Market Cap Data</h4>
-      <ul>
-        <li style={{fontWeight: 'bold'}}>Current Market Cap: { data?.marketCapData?.current }</li>
-        <li style={{fontWeight: 'bold'}}>24 Hour Market Cap: { data?.marketCapData?.day }</li>
-        <li style={{fontWeight: 'bold'}}>7 day Market Cap: { data?.marketCapData?.week }</li>
-      </ul>
-      <h4>Buy Signals</h4>
-      <ul>
-        {
-          buySignals?.map(signal => {
-            return <li>{signal}</li>
-          })
-        }
-      </ul>
-      <h4>Sell Signals</h4>
-      <ul>
-        {
-          sellSignals?.map(signal => {
-            return <li>{signal}</li>
-          })
-        }
-      </ul>
+        <h3 className="text-sm">Ethereum Stats</h3> 
+        <h4>Price Info</h4>
+        <div className="md:flex mb-4">
+          <ul className="ml-0 md:w-1/2">
+            <li><span className="font-bold">Recent:</span> ${current[current.length - 1].amount.toFixed(2)}</li>
+            <li><span className="font-bold">1 day:</span> ${twentyFourHourAverage.amount.toFixed(2)}</li>
+            <li><span className="font-bold">7 day:</span> ${weeklyAverages[weeklyAverages.length - 1].amount.toFixed(2)}</li>
+          </ul>
+          <ul className="ml-0 md:w-1/2">
+            <li><span className="font-bold">1 day high:</span> { data.hourlyHigh.toFixed(2) }</li>
+            <li><span className="font-bold">1 day low:</span> { data.hourlyLow.toFixed(2) }</li>
+            <li><span className="font-bold">7 day high:</span> { data.weeklyHigh.toFixed(2) }</li>
+            <li><span className="font-bold">7 day low:</span> { data.weeklyLow.toFixed(2) }</li>
+          </ul>
+          <ul className="ml-0 md:w-1/2">
+            <li><span className="font-bold">1 day % change:</span> {percentChangeString}</li>
+            <li><span className="font-bold">7 day % change:</span> {percentChangeWeek.toFixed(3)}%</li>
+          </ul>
+        </div>
+      <div className="flex mb-4">
+        <div className="md:w-1/2">
+          <h4>Volume Data</h4>
+          <ul className="ml-0">
+            <li><span className="font-bold">Recent:</span> { data?.volumeData?.current }</li>
+            <li><span className="font-bold">1 day:</span> { data?.volumeData?.day }</li>
+            <li><span className="font-bold">7 day:</span> { data?.volumeData?.week }</li>
+          </ul>
+        </div>
+        <div className="md:w-1/2">
+          <h4>Market Cap Data</h4>
+          <ul className="ml-0">
+            <li><span className="font-bold">Recent:</span> { data?.marketCapData?.current }</li>
+            <li><span className="font-bold">24 Hour:</span> { data?.marketCapData?.day }</li>
+            <li><span className="font-bold">7 Day:</span> { data?.marketCapData?.week }</li>
+          </ul>
+        </div>
+      </div>
+      <div className="md:flex mb-4">
+        <div className="md:w-1/2">
+          <h4>Buy Signals</h4>
+          <ul className="ml-0">
+            {
+              buySignals?.map(signal => {
+                return <li>{signal}</li>
+              })
+            }
+          </ul>
+        </div>
+        <div className="md:w-1/2">
+          <h4>Sell Signals</h4>
+          <ul>
+            {
+              sellSignals?.map(signal => {
+                return <li>{signal}</li>
+              })
+            }
+          </ul>
+        </div>
+      </div>
       <h3>6 Hour Real-time</h3>
       {
         current && (
