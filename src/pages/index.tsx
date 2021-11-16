@@ -9,6 +9,9 @@ import { Bar, Line } from "react-chartjs-2"
 import { format } from "date-fns"
 
 export default function page () {
+  const [display, setDisplay] = useState<'price'|'volume'|'market'>('price')
+  const [timeFrame, setTimeFrame] = useState<'recent'|'small'|'medium'>('recent')
+  const [viewType, setViewType] = useState<'stats'|'graph'>('stats')
   const {data, loading, error} = useQuery(gql`
     query {
       twentyFourHourAverage {
@@ -175,6 +178,37 @@ const hourlyVolumeData = {
 }
 
 
+const hourlyMarketCapData = {
+  labels: hourlyAverages.map(d => {
+    return format(new Date(d.date), "h:m:s aaa")
+  }),
+  datasets: [
+    {
+      label: 'Hourly Market Cap',
+      data: hourlyAverages.map(d => d.market_cap),
+      fill: true,
+      backgroundColor: 'rgba(50, 200, 500, .3)',
+      borderColor: '#080',
+    },
+    {
+      label: 'Weekly average',
+      data: current.map((a, i) => {
+        return data.marketCapData.week
+      }),
+      fill: false,
+      backgroundColor: 'rgba(200, 50, 50, .3)',
+      borderColor: 'rgba(200, 50, 50, 1)',
+    },
+    {
+      label: '24 hour average',
+      data: current.map(a => data.marketCapData.day),
+      fill: false,
+      borderColor: 'rgba(50, 50, 200, 1)'
+    }
+  ]
+}
+
+
 
   const options = {
     scales: {
@@ -330,21 +364,30 @@ const hourlyVolumeData = {
   return (
     <Layout>
       <Seo title="Home" />
-        <h3 className="text-sm">Ethereum Stats</h3> 
-        <h4>Price Info</h4>
-        <div className="md:flex mb-4">
-          <ul className="ml-0 md:w-1/2">
+      <ul className="ml-0 border-b border-color-gray-800">
+        <li 
+          onClick={() => {setViewType('stats')}}
+          className="text-lg cursor-pointer mx-2 font-bold text-sm inline-block">Stats</li>
+        <li 
+          onClick={() => {setViewType('graph')}}
+          className="text-lg cursor-pointer mx-2 font-bold text-sm inline-block">Graph</li>
+      </ul>
+      {viewType === 'stats' && (
+        <div>
+        <h4 className="text-md">Price Info</h4>
+        <div className="flex mb-4">
+          <ul className="ml-0 w-1/3">
             <li><span className="font-bold">Recent:</span> ${current[current.length - 1].amount.toFixed(2)}</li>
-            <li><span className="font-bold">1 day:</span> ${twentyFourHourAverage.amount.toFixed(2)}</li>
-            <li><span className="font-bold">7 day:</span> ${weeklyAverages[weeklyAverages.length - 1].amount.toFixed(2)}</li>
+            <li><span className="font-bold">1 day avg:</span> ${twentyFourHourAverage.amount.toFixed(2)}</li>
+            <li><span className="font-bold">7 day avg:</span> ${weeklyAverages[weeklyAverages.length - 1].amount.toFixed(2)}</li>
           </ul>
-          <ul className="ml-0 md:w-1/2">
+          <ul className="ml-0 w-1/3">
             <li><span className="font-bold">1 day high:</span> { data.hourlyHigh.toFixed(2) }</li>
             <li><span className="font-bold">1 day low:</span> { data.hourlyLow.toFixed(2) }</li>
             <li><span className="font-bold">7 day high:</span> { data.weeklyHigh.toFixed(2) }</li>
             <li><span className="font-bold">7 day low:</span> { data.weeklyLow.toFixed(2) }</li>
           </ul>
-          <ul className="ml-0 md:w-1/2">
+          <ul className="ml-0 w-1/3">
             <li><span className="font-bold">1 day % change:</span> {percentChangeString}</li>
             <li><span className="font-bold">7 day % change:</span> {percentChangeWeek.toFixed(3)}%</li>
           </ul>
@@ -389,37 +432,95 @@ const hourlyVolumeData = {
           </ul>
         </div>
       </div>
-      <h3>6 Hour Real-time</h3>
+      </div>
+      )}
+
+      {viewType === 'graph' && (
+        <div>
+          <ul className="ml-0 border-b border-color-gray-800">
+            <li 
+              onClick={() => {setTimeFrame('recent')}}
+              className="text-md cursor-pointer mx-2 font-bold text-sm inline-block">6 Hours</li>
+            <li 
+              onClick={() => {setTimeFrame('small')}}
+              className="text-md cursor-pointer mx-2 font-bold text-sm inline-block">48 Hours</li>
+            <li 
+              onClick={() => {setTimeFrame('medium')}}
+              className="text-md cursor-pointer mx-2 font-bold text-sm inline-block">40 Days</li>
+          </ul>
+      <div className="mb-6">
+        {
+          timeFrame === 'recent' && current && (
+            <>
+            <ul className='ml-0 border-t border-b border-color-gray-500'>
+              <li 
+                onClick={() => {setDisplay('price')}} 
+                className="text-sm inline-block cursor-pointer font-bold mx-2">Price</li>
+              <li 
+                onClick={() => {setDisplay('volume')}} 
+                className="text-sm inline-block cursor-pointer font-bold mx-2">Volume</li>
+              <li 
+                onClick={() => {setDisplay('market')}} 
+                className="text-sm inline-block cursor-pointer font-bold mx-2">Market Cap</li>
+            </ul>
+            {
+              display === 'price' && (
+                <>
+                < Line data={currentData} options={todayOptions} />
+                </>
+              )
+            }
+            {
+              display === 'volume' && (
+                <>
+                <Line data={curVolume} options={options} />
+                </>
+              )
+            }
+            {
+              display === 'market' && (
+                <>
+                <Line data={marketCapVolume} options={options} />
+                </>
+              )
+            }
+            </>
+          )
+        }
+      </div>
       {
-        current && (
+        timeFrame === 'small' && hourlyAverages && (
           <>
-          <Line data={currentData} options={todayOptions} />
-          <h4>Volume</h4>
-          <Line data={curVolume} options={options} />
-          <h4>Market Cap</h4>
-          <Line data={marketCapVolume} options={options} />
+            <ul className='ml-0 border-t border-b border-color-gray-500'>
+              <li 
+                onClick={() => {setDisplay('price')}} 
+                className="text-sm inline-block cursor-pointer font-bold mx-2">Price</li>
+              <li 
+                onClick={() => {setDisplay('volume')}} 
+                className="text-sm inline-block cursor-pointer font-bold mx-2">Volume</li>
+              <li 
+                onClick={() => {setDisplay('market')}} 
+                className="text-sm inline-block cursor-pointer font-bold mx-2">Market Cap</li>
+            </ul>
+            {
+              display === 'price' && <Line data={todayData} options={todayOptions} />
+            }
+            {
+              display === 'volume' &&  <Line data={hourlyVolumeData} options={options} />
+            }
+            {
+              display === 'market' && <Line data={hourlyMarketCapData} options={options} />
+            }
           </>
         )
       }
-      <h3>48 Hourly Averages</h3> 
       {
-        hourlyAverages && (
-          <Line data={todayData} options={todayOptions} />
-        )
-      }
-      <h4>Volume</h4>
-      {
-        hourlyVolumeData && (
-          <Line data={hourlyVolumeData} options={options} />
-        )
-      }
-
-      <h3>40 Day Averages</h3>
-      {
-        dailyAverages && (
+        timeFrame === 'medium' && dailyAverages && (
             <Line data={visualData} options={options} />
         )
       }
+      </div>
+      )}
     </Layout>
   )
 }
