@@ -1,5 +1,7 @@
 import React from 'react';
 import ApiProvider from "./src/apiProvider";
+import './src/assets/main.css'
+
 /**
  * Implement Gatsby's SSR (Server Side Rendering) APIs in this file.
  *

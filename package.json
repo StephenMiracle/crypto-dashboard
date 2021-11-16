@@ -27,20 +27,24 @@
     "recharts": "^2.1.6"
   },
   "devDependencies": {
-    "prettier": "^2.4.1"
+    "autoprefixer": "^9.8.6",
+    "postcss-cli": "^9.0.2",
+    "prettier": "^2.4.1",
+    "tailwindcss": "^2.2.19"
   },
   "keywords": [
     "gatsby"
   ],
   "license": "0BSD",
   "scripts": {
-    "build": "gatsby build",
+    "build": "npm run watch:css && gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "start": "gatsby develop",
+    "start": "npm run watch:css && gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
+    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css"
   },
   "repository": {
     "type": "git",

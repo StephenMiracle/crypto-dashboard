@@ -45,6 +45,7 @@ export default function page () {
       hourlyAverages(limit: 48)  {
         amount
         date
+        volume
       }
       weeklyAverages(limit: 40)  {
         amount
@@ -143,6 +144,36 @@ const visualData = {
   ]
 }
 
+const hourlyVolumeData = {
+  labels: hourlyAverages.map(d => {
+    return format(new Date(d.date), "h:m:s aaa")
+  }),
+  datasets: [
+    {
+      label: 'Hourly Volume',
+      data: hourlyAverages.map(d => d.volume),
+      fill: true,
+      backgroundColor: 'rgba(50, 200, 500, .3)',
+      borderColor: '#080',
+    },
+    {
+      label: 'Weekly average',
+      data: current.map((a, i) => {
+        return data.volumeData.week
+      }),
+      fill: false,
+      backgroundColor: 'rgba(200, 50, 50, .3)',
+      borderColor: 'rgba(200, 50, 50, 1)',
+    },
+    {
+      label: '24 hour average',
+      data: current.map(a => data.volumeData.day),
+      fill: false,
+      borderColor: 'rgba(50, 50, 200, 1)'
+    }
+  ]
+}
+
 
 
   const options = {
@@ -234,7 +265,7 @@ const visualData = {
         label: 'Current',
         data: current.map(d => d.volume),
         fill: true,
-        backgroundColor: 'rgba(50, 200, 500)',
+        backgroundColor: 'rgba(50, 200, 500, .3)',
         borderColor: '#080',
       },
       {
@@ -246,6 +277,12 @@ const visualData = {
         backgroundColor: 'rgba(200, 50, 50, .3)',
         borderColor: 'rgba(200, 50, 50, .3)',
       },
+      {
+        label: '24 hour average',
+        data: current.map(a => data.volumeData.day),
+        fill: false,
+        borderColor: 'rgba(50, 50, 200, 1)'
+      }
     ]
   }
 
@@ -293,7 +330,7 @@ const visualData = {
   return (
     <Layout>
       <Seo title="Home" />
-      <h3>Ethereum Stats</h3> 
+      <h3 className="text-sm">Ethereum Stats</h3> 
       <ul>
         <li style={{fontWeight: 'bold'}}>Most Recent Price: ${current[current.length - 1].amount.toFixed(2)}</li>
         <li style={{fontWeight: 'bold'}}>24 Hour Average: ${twentyFourHourAverage.amount.toFixed(2)}</li>
@@ -349,6 +386,12 @@ const visualData = {
       {
         hourlyAverages && (
           <Line data={todayData} options={todayOptions} />
+        )
+      }
+      <h4>Volume</h4>
+      {
+        hourlyVolumeData && (
+          <Line data={hourlyVolumeData} options={options} />
         )
       }
 
