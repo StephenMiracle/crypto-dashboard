@@ -382,10 +382,10 @@ const hourlyMarketCapData = {
             <li><span className="font-bold">7 day avg:</span> ${weeklyAverages[weeklyAverages.length - 1].amount.toFixed(2)}</li>
           </ul>
           <ul className="ml-0 w-1/3">
-            <li><span className="font-bold">1 day high:</span> { data.hourlyHigh.toFixed(2) }</li>
-            <li><span className="font-bold">1 day low:</span> { data.hourlyLow.toFixed(2) }</li>
-            <li><span className="font-bold">7 day high:</span> { data.weeklyHigh.toFixed(2) }</li>
-            <li><span className="font-bold">7 day low:</span> { data.weeklyLow.toFixed(2) }</li>
+            <li><span className="font-bold">1 day high:</span> ${ data.hourlyHigh.toFixed(2) }</li>
+            <li><span className="font-bold">1 day low:</span> ${ data.hourlyLow.toFixed(2) }</li>
+            <li><span className="font-bold">7 day high:</span> ${ data.weeklyHigh.toFixed(2) }</li>
+            <li><span className="font-bold">7 day low:</span> ${ data.weeklyLow.toFixed(2) }</li>
           </ul>
           <ul className="ml-0 w-1/3">
             <li><span className="font-bold">1 day % change:</span> {percentChangeString}</li>
@@ -396,17 +396,17 @@ const hourlyMarketCapData = {
         <div className="md:w-1/2">
           <h4>Volume Data</h4>
           <ul className="ml-0">
-            <li><span className="font-bold">Recent:</span> { (data?.volumeData?.current / 1000000000).toFixed(2) }B</li>
-            <li><span className="font-bold">1 day:</span> { (data?.volumeData?.day / 1000000000).toFixed(2) }B</li>
-            <li><span className="font-bold">7 day:</span> { (data?.volumeData?.week / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">Recent:</span> ${ (data?.volumeData?.current / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">1 day:</span> ${ (data?.volumeData?.day / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">7 day:</span> ${ (data?.volumeData?.week / 1000000000).toFixed(2) }B</li>
           </ul>
         </div>
         <div className="md:w-1/2">
           <h4>Market Cap Data</h4>
           <ul className="ml-0">
-            <li><span className="font-bold">Recent:</span> { (data?.marketCapData?.current / 1000000000).toFixed(2) }B</li>
-            <li><span className="font-bold">24 Hour:</span> { (data?.marketCapData?.day / 1000000000).toFixed(2) }B</li>
-            <li><span className="font-bold">7 Day:</span> { (data?.marketCapData?.week / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">Recent:</span> ${ (data?.marketCapData?.current / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">24 Hour:</span> ${ (data?.marketCapData?.day / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">7 Day:</span> ${ (data?.marketCapData?.week / 1000000000).toFixed(2) }B</li>
           </ul>
         </div>
       </div>
