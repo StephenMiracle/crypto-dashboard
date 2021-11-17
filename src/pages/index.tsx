@@ -373,7 +373,7 @@ const hourlyMarketCapData = {
           className="text-lg cursor-pointer mx-2 font-bold text-sm inline-block">Graph</li>
       </ul>
       {viewType === 'stats' && (
-        <div>
+        <div style={{maxWidth: '960px'}}>
         <h4 className="text-md">Price Info</h4>
         <div className="flex mb-4">
           <ul className="ml-0 w-1/3">
