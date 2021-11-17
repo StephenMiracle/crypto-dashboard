@@ -364,7 +364,7 @@ const hourlyMarketCapData = {
   return (
     <Layout>
       <Seo title="Home" />
-      <ul style={{maxWidth: '960px', margin: '0 auto'}} className="ml-0 border-b border-color-gray-800">
+      <ul style={{maxWidth: '960px', margin: '10px auto'}} className="ml-0 border-b border-color-gray-800">
         <li 
           onClick={() => {setViewType('stats')}}
           className="text-lg cursor-pointer mx-2 font-bold text-sm inline-block">Stats</li>
@@ -374,7 +374,7 @@ const hourlyMarketCapData = {
       </ul>
       {viewType === 'stats' && (
         <div style={{maxWidth: '960px', margin: '0 auto'}}>
-        <h4 className="text-md">Price Info</h4>
+        <h4 className="text-md">Price Data</h4>
         <div className="flex mb-4">
           <ul className="ml-0 w-1/3">
             <li><span className="font-bold">Recent:</span> ${current[current.length - 1].amount.toFixed(2)}</li>
@@ -394,24 +394,6 @@ const hourlyMarketCapData = {
         </div>
       <div className="flex mb-4">
         <div className="md:w-1/2">
-          <h4>Volume Data</h4>
-          <ul className="ml-0">
-            <li><span className="font-bold">Recent:</span> ${ (data?.volumeData?.current / 1000000000).toFixed(2) }B</li>
-            <li><span className="font-bold">1 day:</span> ${ (data?.volumeData?.day / 1000000000).toFixed(2) }B</li>
-            <li><span className="font-bold">7 day:</span> ${ (data?.volumeData?.week / 1000000000).toFixed(2) }B</li>
-          </ul>
-        </div>
-        <div className="md:w-1/2">
-          <h4>Market Cap Data</h4>
-          <ul className="ml-0">
-            <li><span className="font-bold">Recent:</span> ${ (data?.marketCapData?.current / 1000000000).toFixed(2) }B</li>
-            <li><span className="font-bold">24 Hour:</span> ${ (data?.marketCapData?.day / 1000000000).toFixed(2) }B</li>
-            <li><span className="font-bold">7 Day:</span> ${ (data?.marketCapData?.week / 1000000000).toFixed(2) }B</li>
-          </ul>
-        </div>
-      </div>
-      <div className="md:flex mb-4">
-        <div className="md:w-1/2">
           <h4>Buy Signals</h4>
           <ul className="ml-0">
             {
@@ -420,8 +402,6 @@ const hourlyMarketCapData = {
               })
             }
           </ul>
-        </div>
-        <div className="md:w-1/2">
           <h4>Sell Signals</h4>
           <ul>
             {
@@ -429,6 +409,22 @@ const hourlyMarketCapData = {
                 return <li>{signal}</li>
               })
             }
+          </ul>
+        </div>
+        <div className="md:w-1/4">
+          <h4>Volume Data</h4>
+          <ul className="ml-0">
+            <li><span className="font-bold">Recent:</span> ${ (data?.volumeData?.current / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">1 day:</span> ${ (data?.volumeData?.day / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">7 day:</span> ${ (data?.volumeData?.week / 1000000000).toFixed(2) }B</li>
+          </ul>
+        </div>
+        <div className="md:w-1/4">
+          <h4>Market Cap Data</h4>
+          <ul className="ml-0">
+            <li><span className="font-bold">Recent:</span> ${ (data?.marketCapData?.current / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">24 Hour:</span> ${ (data?.marketCapData?.day / 1000000000).toFixed(2) }B</li>
+            <li><span className="font-bold">7 Day:</span> ${ (data?.marketCapData?.week / 1000000000).toFixed(2) }B</li>
           </ul>
         </div>
       </div>
