@@ -364,7 +364,7 @@ const hourlyMarketCapData = {
   return (
     <Layout>
       <Seo title="Home" />
-      <ul className="ml-0 border-b border-color-gray-800">
+      <ul style={{maxWidth: '960px', margin: '0 auto'}} className="ml-0 border-b border-color-gray-800">
         <li 
           onClick={() => {setViewType('stats')}}
           className="text-lg cursor-pointer mx-2 font-bold text-sm inline-block">Stats</li>
