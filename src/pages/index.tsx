@@ -374,7 +374,7 @@ const hourlyMarketCapData = {
       </ul>
       {viewType === 'stats' && (
         <div>
-          <div className="md:inline-block md:w-1/2 md:pr-4">
+          <div className="md:inline-block md:w-3/5 md:pr-4">
             <h4>Price Data</h4>
             <div className="flex">
               <ul className="ml-0 w-1/3">
@@ -394,7 +394,7 @@ const hourlyMarketCapData = {
               </ul>
             </div>
           </div>
-          <div className="md:inline-block md:w-1/2 align-top">
+          <div className="md:inline-block md:w-2/5 align-top">
             <div className="flex">
               <ul className="ml-0 w-1/2">
               <h4>Volume Data</h4>
