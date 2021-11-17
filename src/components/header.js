@@ -27,7 +27,6 @@ const Header = ({ siteTitle }) => (
           {siteTitle}
         </Link>
       </h1>
-      <p style={{color: '#fff', marginBottom: '.5rem'}}>Spreading the world of Ethereum</p>
     </div>
   </header>
 )

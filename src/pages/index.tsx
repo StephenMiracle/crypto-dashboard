@@ -9,7 +9,7 @@ import { Bar, Line } from "react-chartjs-2"
 import { format } from "date-fns"
 
 export default function page () {
-  const [display, setDisplay] = useState<'price'|'volume'|'market'>('price')
+  const [display, setDisplay] = useState<'price'|'volume'|'market'|'circulating'>('price')
   const [timeFrame, setTimeFrame] = useState<'recent'|'small'|'medium'>('recent')
   const [viewType, setViewType] = useState<'stats'|'graph'>('stats')
   const {data, loading, error} = useQuery(gql`
@@ -21,6 +21,11 @@ export default function page () {
       hourlyLow
       weeklyHigh
       weeklyLow
+      circulatingSupplyData {
+        current
+        day
+        week
+      }
       volumeData {
         current
         day
@@ -36,6 +41,7 @@ export default function page () {
         eth_dominance
         btc_dominance
         market_cap
+        circulating_supply
         volume
         date
       }
@@ -44,13 +50,22 @@ export default function page () {
         date
         high
         low
+        circulating_supply
       }
       hourlyAverages(limit: 48)  {
         amount
         date
         volume
+        circulating_supply
       }
       weeklyAverages(limit: 40)  {
+        amount
+        date
+        high
+        low
+        circulating_supply
+      }
+      monthlyAverages(limit: 40)  {
         amount
         date
         high
@@ -62,6 +77,7 @@ export default function page () {
   const dailyAverages: any[] = data ? data.dailyAverages : []
   const weeklyAverages: any[] = data ? data.weeklyAverages : []
   const hourlyAverages: any[] = data ? data.hourlyAverages : []
+  const monthlyAverages: any[] = data ? data.monthlyAverages : []
   const twentyFourHourAverage: any = data ? data.twentyFourHourAverage : {}
   const current: any[] = data ? data.current : []
 
@@ -133,6 +149,13 @@ const visualData = {
       borderColor: '#800',
     },
     {
+      label: 'Monthly Averages',
+      data: monthlyAverages.map(d => d.amount),
+      fill: true,
+      backgroundColor: 'rgba(200, 200, 500, .3)',
+      borderColor: '#008',
+    },
+    {
       label: 'Weekly Highs',
       data: weeklyAverages.map(d => d.high),
       fill: false,
@@ -143,6 +166,40 @@ const visualData = {
       data: weeklyAverages.map(d => d.low),
       fill: false,
       borderColor: 'rgba(105, 105, 105, .4)'
+    },
+    {
+      label: 'Monthly Highs',
+      data: monthlyAverages.map(d => d.high),
+      fill: false,
+      borderColor: 'rgba(15, 15, 15, .4)'
+    },
+    {
+      label: 'Monthly Lows',
+      data: monthlyAverages.map(d => d.low),
+      fill: false,
+      borderColor: 'rgba(115, 115, 115, .4)'
+    },
+  ]
+}
+
+const volumeVisualData = {
+  labels: dailyAverages.map(d => {
+    return format(new Date(d.date), "MM/dd/yyyy")
+  }),
+  datasets: [
+    {
+      label: 'Weekly Averages',
+      data: weeklyAverages.map(d => d.circulating_supply),
+      fill: true,
+      backgroundColor: 'rgba(50, 200, 500, .3)',
+      borderColor: '#080',
+    },
+    {
+      label: 'Daily Averages',
+      data: dailyAverages.map(d => d.circulating_supply),
+      fill: true,
+      backgroundColor: 'rgba(200, 500, 500, .3)',
+      borderColor: '#800',
     }
   ]
 }
@@ -171,6 +228,36 @@ const hourlyVolumeData = {
     {
       label: '24 hour average',
       data: current.map(a => data.volumeData.day),
+      fill: false,
+      borderColor: 'rgba(50, 50, 200, 1)'
+    }
+  ]
+}
+
+const hourlyCirculatingSupplyData = {
+  labels: hourlyAverages.map(d => {
+    return format(new Date(d.date), "h:m:s aaa")
+  }),
+  datasets: [
+    {
+      label: 'Hourly Volume',
+      data: hourlyAverages.map(d => d.circulating_supply),
+      fill: true,
+      backgroundColor: 'rgba(50, 200, 500, .3)',
+      borderColor: '#080',
+    },
+    {
+      label: 'Weekly average',
+      data: current.map((a, i) => {
+        return data.circulatingSupplyData.week
+      }),
+      fill: false,
+      backgroundColor: 'rgba(200, 50, 50, .3)',
+      borderColor: 'rgba(200, 50, 50, 1)',
+    },
+    {
+      label: '24 hour average',
+      data: current.map(a => data.circulatingSupplyData.day),
       fill: false,
       borderColor: 'rgba(50, 50, 200, 1)'
     }
@@ -320,6 +407,35 @@ const hourlyMarketCapData = {
     ]
   }
 
+
+  const curCirculating = {
+    labels: current.map(d => { return format(new Date(d.date), "h:m:s aaa") }),
+    datasets: [
+      {
+        label: 'Current',
+        data: current.map(d => d.circulating_supply),
+        fill: true,
+        backgroundColor: 'rgba(50, 200, 500, .3)',
+        borderColor: '#080',
+      },
+      {
+        label: 'Weekly average',
+        data: current.map((a, i) => {
+          return data.circulatingSupplyData.week
+        }),
+        fill: false,
+        backgroundColor: 'rgba(200, 50, 50, .3)',
+        borderColor: 'rgba(200, 50, 50, .3)',
+      },
+      {
+        label: '24 hour average',
+        data: current.map(a => data.circulatingSupplyData.day),
+        fill: false,
+        borderColor: 'rgba(50, 50, 200, 1)'
+      }
+    ]
+  }
+
   const marketCapVolume = {
     labels: current.map(d => { return format(new Date(d.date), "h:m:s aaa") }),
     datasets: [
@@ -460,27 +576,21 @@ const hourlyMarketCapData = {
               <li 
                 onClick={() => {setDisplay('market')}} 
                 className="text-sm inline-block cursor-pointer font-bold mx-2">Market Cap</li>
+              <li 
+                onClick={() => {setDisplay('circulating')}} 
+                className="text-sm inline-block cursor-pointer font-bold mx-2">Circulating Supply</li>
             </ul>
             {
-              display === 'price' && (
-                <>
-                < Line data={currentData} options={todayOptions} />
-                </>
-              )
+              display === 'price' && < Line data={currentData} options={todayOptions} />
             }
             {
-              display === 'volume' && (
-                <>
-                <Line data={curVolume} options={options} />
-                </>
-              )
+              display === 'volume' && <Line data={curVolume} options={options} />
             }
             {
-              display === 'market' && (
-                <>
-                <Line data={marketCapVolume} options={options} />
-                </>
-              )
+              display === 'market' && <Line data={marketCapVolume} options={options} />
+            }
+            {
+              display === 'circulating' && <Line data={curCirculating} options={options} />
             }
             </>
           )
@@ -499,6 +609,9 @@ const hourlyMarketCapData = {
               <li 
                 onClick={() => {setDisplay('market')}} 
                 className="text-sm inline-block cursor-pointer font-bold mx-2">Market Cap</li>
+                <li 
+                  onClick={() => {setDisplay('circulating')}} 
+                  className="text-sm inline-block cursor-pointer font-bold mx-2">Circulating Supply</li>
             </ul>
             {
               display === 'price' && <Line data={todayData} options={todayOptions} />
@@ -509,12 +622,36 @@ const hourlyMarketCapData = {
             {
               display === 'market' && <Line data={hourlyMarketCapData} options={options} />
             }
+            {
+              display === 'circulating' && <Line data={hourlyCirculatingSupplyData} options={options} />
+            }
           </>
         )
       }
       {
         timeFrame === 'medium' && dailyAverages && (
-            <Line data={visualData} options={options} />
+          <>
+          <ul className='ml-0 border-t border-b border-color-gray-500'>
+            <li 
+              onClick={() => {setDisplay('price')}} 
+              className="text-sm inline-block cursor-pointer font-bold mx-2">Price</li>
+            <li 
+              onClick={() => {setDisplay('volume')}} 
+              className="text-sm inline-block cursor-pointer font-bold mx-2">Volume</li>
+            <li 
+              onClick={() => {setDisplay('market')}} 
+              className="text-sm inline-block cursor-pointer font-bold mx-2">Market Cap</li>
+              <li 
+                onClick={() => {setDisplay('circulating')}} 
+                className="text-sm inline-block cursor-pointer font-bold mx-2">Circulating Supply</li>
+          </ul>
+          {
+            display === 'price' && <Line data={visualData} options={options} />
+          }
+          {
+            display === 'volume' && <Line data={volumeVisualData} options={options} />
+          }
+          </>
         )
       }
       </div>
