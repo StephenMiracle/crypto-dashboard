@@ -52,7 +52,7 @@ export default function page () {
         low
         circulating_supply
       }
-      hourlyAverages(limit: 48)  {
+      hourlyAverages(limit: 30)  {
         amount
         date
         volume
@@ -557,7 +557,7 @@ const hourlyMarketCapData = {
               className="text-md cursor-pointer mx-2 font-bold text-sm inline-block">6 Hours</li>
             <li 
               onClick={() => {setTimeFrame('small')}}
-              className="text-md cursor-pointer mx-2 font-bold text-sm inline-block">48 Hours</li>
+              className="text-md cursor-pointer mx-2 font-bold text-sm inline-block">30 Hours</li>
             <li 
               onClick={() => {setTimeFrame('medium')}}
               className="text-md cursor-pointer mx-2 font-bold text-sm inline-block">40 Days</li>
